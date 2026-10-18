@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Semantic Bridge | Browser Lane",
+  "version": "0.2.2",
+  "description": "Agent-owned tab group with auto-unfreeze, background actions and safe parking.",
+  "permissions": [
+    "tabs",
+    "tabGroups",
+    "storage",
+    "scripting",
+    "nativeMessaging",
+    "alarms"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "background": {
+    "service_worker": "service_worker.js"
+  },
+  "action": {
+    "default_title": "Semantic Bridge Browser Lane"
+  }
+}
