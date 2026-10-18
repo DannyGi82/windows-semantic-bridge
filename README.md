@@ -8,23 +8,23 @@ Experimental, Windows-only companion for MCP-based desktop automation. The sourc
 
 The project is independently packaged; it does **not** redistribute or replace [Windows MCP Server](https://github.com/deploymenttheory/windows-mcp-server). An actual desktop action must still be validated and authorized by an external Windows MCP executor.
 
-## Watch it work — real Chrome capture
+## Watch it work — real Chrome window
 
-![Browser Lane controlling an isolated Chrome instance](assets/demo-browser-lane.gif)
+![Real isolated Chrome browser window performing Browser Lane actions](assets/demo-browser-lane.gif)
 
-**Recorded live from Chromium, not generated UI imagery.** The animation uses the project's actual `BrowserLane` implementation against a disposable local HTTP test fixture. It shows real field updates, DOM events, button invocation, state verification, background tab creation, navigation, and owned-tab cleanup. The session uses a separate temporary Chrome profile, never attaches to the user's personal tabs, and checks foreground-window identity at each captured step. The overlay identifies observed operations and owned-tab count.
+**A real Chrome window, not a mockup:** the GIF includes Chrome's actual **tab strip and address bar**, captured from a dedicated Chrome process with a fresh temporary profile. The local page is a disposable test fixture; it is **not the product's GUI**. Every interaction is performed by this repository's `BrowserLane` implementation, using owned tabs only: fill a field, invoke buttons, verify DOM state, open a second browser tab, navigate it, and close it.
 
-> The page in the GIF is a purpose-built **test fixture, not the project's user interface**. Frames were captured directly using Chrome's `Page.captureScreenshot` and assembled into a GIF; the demo recorder adds only an informational border/caption.
+> Recording the browser **window chrome** (rather than only webpage content) requires temporarily displaying this isolated Chrome window in the foreground. The capture script restores the previous foreground application when finished and refuses to save frames if a different window becomes active. **This video demonstrates browser automation, not a no-focus-stealing benchmark.** Browser Lane itself performs actions through CDP without synthetic mouse/keyboard input.
 
-[View a still frame](assets/demo-browser-lane.png) · [Run the recording yourself](scripts/record_browser_demo.py)
+[View a full-size browser screenshot](assets/demo-browser-lane.png) · [Reproduce the capture](scripts/record_browser_demo.py)
 
-To recreate the GIF on Windows after installing the development requirements:
+To regenerate the GIF on Windows after installing the development requirements:
 
 ```powershell
 .\.venv\Scripts\python.exe scripts\record_browser_demo.py
 ```
 
-The recording writes `assets/demo-browser-lane.gif` and `assets/demo-browser-lane.png`, closes its own Chrome process, and discards the temporary profile after completion. It requires installed Chrome and never sends traffic to an external site.
+The recorder operates only on a local HTTP fixture at `127.0.0.1`, creates an isolated Chrome user-data directory, saves a GIF and still image, closes its own Chrome process, and disposes of the temporary profile. Its screen capture is restricted to the browser window interior and checked against the exact temporary Chrome window identity to avoid personal desktop content.
 ## Why it exists
 
 Coordinate-based GUI agents constantly capture screens, infer click locations, and steal focus. Semantic Bridge explores a different split: the observer reports accessibility elements and deltas; the planner targets explicit unique elements; and the existing authorized executor performs desktop actions only after rechecking the current state. Browser Lane uses only agent-owned tabs, not the user's open tabs.
