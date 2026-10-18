@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest a bounded, testable change.
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior and scope
+      description: Explain effect on focus, ownership and existing permissions.
+    validations:
+      required: true
+  - type: textarea
+    id: test
+    attributes:
+      label: Reproducible acceptance test
+      description: Describe a non-sensitive scenario that proves it works.

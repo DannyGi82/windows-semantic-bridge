@@ -1,22 +1,36 @@
-name: Windows tests
+name: Windows checks
+
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
 permissions:
   contents: read
+
 jobs:
   test:
     runs-on: windows-latest
+    timeout-minutes: 15
+    env:
+      PYTHONPATH: .
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Dependencies
+      - name: Install requirements
         run: python -m pip install -r requirements-dev.txt
-      - name: Python compilation
+      - name: Python syntax
         run: python -m compileall -q .
-      - name: Automated tests
-        env:
-          PYTHONPATH: .
+      - name: Compile optional Native Messaging test proxy
+        shell: pwsh
+        run: |
+          $compiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
+          if (-not (Test-Path $compiler)) { throw "Missing .NET Framework compiler on Windows runner" }
+          & $compiler /nologo /target:exe "/out:browser_lane\native_host_proxy.exe" browser_lane\native_host_proxy.cs
+          if ($LASTEXITCODE -ne 0) { throw "Native host proxy compilation failed" }
+      - name: Python and Native Messaging tests
         run: python -m pytest -q tests browser_lane/tests --ignore=browser_lane/tests/test_cdp_integration.py
+      - name: Real isolated Chrome E2E tests
+        run: python -m pytest -q browser_lane/tests/test_cdp_integration.py

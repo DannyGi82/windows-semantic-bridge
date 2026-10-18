@@ -1,0 +1,34 @@
+name: Bug report
+description: Reproducible defect with non-sensitive test data.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: "Do not attach tokens, personal screenshots, session files or sensitive UI text."
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Windows, Python, Chrome and operating mode.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands with a disposable test fixture.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
