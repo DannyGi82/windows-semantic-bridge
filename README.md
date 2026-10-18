@@ -1,11 +1,30 @@
 # Windows Semantic Bridge
 
+![Windows](https://img.shields.io/badge/platform-Windows%2011-1483c7) ![Python](https://img.shields.io/badge/Python-3.12%2B-3776ab) [![MIT License](https://img.shields.io/badge/license-MIT-42ba86)](LICENSE)  [CI](.github/workflows/windows-tests.yml)
+
 **Windows accessibility observation and focus-preserving agent browser control.**
 
 Experimental, Windows-only companion for MCP-based desktop automation. The source includes a read-only UI Automation observer, a fail-closed semantic action planner, an isolated headless Chrome controller, and a Chrome Manifest V3 extension for agent-owned background tabs.
 
 The project is independently packaged; it does **not** redistribute or replace [Windows MCP Server](https://github.com/deploymenttheory/windows-mcp-server). An actual desktop action must still be validated and authorized by an external Windows MCP executor.
 
+## Watch it work — real Chrome capture
+
+![Browser Lane controlling an isolated Chrome instance](assets/demo-browser-lane.gif)
+
+**Recorded live from Chromium, not generated UI imagery.** The animation uses the project's actual `BrowserLane` implementation against a disposable local HTTP test fixture. It shows real field updates, DOM events, button invocation, state verification, background tab creation, navigation, and owned-tab cleanup. The session uses a separate temporary Chrome profile, never attaches to the user's personal tabs, and checks foreground-window identity at each captured step. The overlay identifies observed operations and owned-tab count.
+
+> The page in the GIF is a purpose-built **test fixture, not the project's user interface**. Frames were captured directly using Chrome's `Page.captureScreenshot` and assembled into a GIF; the demo recorder adds only an informational border/caption.
+
+[View a still frame](assets/demo-browser-lane.png) · [Run the recording yourself](scripts/record_browser_demo.py)
+
+To recreate the GIF on Windows after installing the development requirements:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\record_browser_demo.py
+```
+
+The recording writes `assets/demo-browser-lane.gif` and `assets/demo-browser-lane.png`, closes its own Chrome process, and discards the temporary profile after completion. It requires installed Chrome and never sends traffic to an external site.
 ## Why it exists
 
 Coordinate-based GUI agents constantly capture screens, infer click locations, and steal focus. Semantic Bridge explores a different split: the observer reports accessibility elements and deltas; the planner targets explicit unique elements; and the existing authorized executor performs desktop actions only after rechecking the current state. Browser Lane uses only agent-owned tabs, not the user's open tabs.

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Semantic Bridge | Isolated Chrome Test</title>
+<style>
+:root{color-scheme:dark;font-family:Inter,"Segoe UI",Arial,sans-serif;background:#070d1b;color:#ecf6ff}
+*{box-sizing:border-box}
+body{margin:0;min-width:1000px;background:radial-gradient(ellipse at 92% 0%,#15365a 0%,transparent 42%),#070d1b;color:#ecf6ff;font-size:15px}
+header{height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #263849;padding:0 42px;background:#091326dd}
+.logo{display:flex;align-items:center;gap:12px;font-size:18px;font-weight:700;letter-spacing:.2px}.logo .mark{color:#28daf0;font-size:25px}
+.pill{border:1px solid #325773;border-radius:28px;padding:9px 15px;color:#a4cfdf;font-size:12px;letter-spacing:1px}
+main{max-width:1080px;margin:0 auto;padding:42px 48px}
+.eyebrow{color:#45d3df;letter-spacing:3px;font-weight:800;font-size:12px}
+h1{font-size:42px;letter-spacing:-1.6px;margin:12px 0 6px;font-weight:750}
+.lead{color:#9aafc5;font-size:17px;margin:0 0 28px;line-height:1.5}
+.grid{display:grid;grid-template-columns:1.24fr .92fr;gap:20px;align-items:stretch}
+.card{border:1px solid #2a4562;background:linear-gradient(145deg,#122239,#0b192d);border-radius:17px;box-shadow:0 12px 34px #0005;padding:25px}
+.card h2{font-size:20px;margin:0 0 9px}.small{color:#90acc1;font-size:14px;line-height:1.5}
+label{display:block;color:#a8c5d8;font-size:13px;margin:23px 0 8px}
+input{width:100%;height:49px;border:1px solid #355371;border-radius:10px;background:#091524;color:#effaff;padding:0 16px;font-size:17px;outline:0}
+input:focus{border-color:#25cfe8;box-shadow:0 0 0 3px #22d4e51a}
+button{margin-top:17px;background:#21c6de;color:#001523;border:0;border-radius:10px;padding:13px 23px;font-weight:800;font-size:14px;cursor:pointer}
+button.secondary{background:transparent;color:#aee9ed;border:1px solid #3a6877;margin-left:8px}
+button:disabled{opacity:.45;cursor:default}
+.tag{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:#20d9e2}
+.panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:17px}
+.status{background:#0a2940;color:#70eaff;border:1px solid #176181;border-radius:20px;padding:6px 11px;font-size:11px}
+.log{margin-top:17px;min-height:158px;background:#061223;border:1px solid #243a56;border-radius:11px;padding:13px 17px;font:13px/1.8 Consolas,monospace;color:#a4c6e2}
+.line{display:flex;gap:12px}.num{color:#36d4e3}.ok{color:#6df5bd}.muted{color:#6e829d}
+.result{margin-top:20px;border:1px solid #2b4960;background:#07182a;padding:14px 16px;border-radius:9px;display:none;color:#b7e5ef}
+.result.visible{display:block}
+footer{border-top:1px solid #28405a;margin-top:28px;padding:16px 2px;color:#728ca4;font-size:12px;display:flex;justify-content:space-between}
+.docs h2{font-size:25px}.docs .item{margin:12px 0;padding:15px;background:#0b1c30;border:1px solid #244058;border-radius:10px}
+.docs .item strong{color:#e1f7fb}.docs .item p{margin:5px 0 0;color:#9bb2c5;font-size:13px}
+</style>
+</head>
+<body>
+<header><div class="logo"><span class="mark">▣</span> Windows Semantic Bridge <span style="color:#587389;font-size:12px;font-weight:500;margin-left:10px">/ browser lane demo</span></div><div class="pill">LOCAL FIXTURE • NO USER TABS</div></header>
+<main>
+<div class="eyebrow" id="stage">LIVE CHROME SESSION / READY</div>
+<h1 id="title">Agent-owned browser automation</h1>
+<p class="lead" id="subtitle">A disposable local page controlled by the real Browser Lane API.</p>
+<div id="work">
+<div class="grid">
+  <section class="card">
+    <div class="panel-head"><h2>Example task board</h2><span class="status">Chrome · isolated profile</span></div>
+    <p class="small">The agent will fill this form and invoke the button, without a synthetic keyboard event or changing the foreground window.</p>
+    <label for="taskName">Task title</label>
+    <input type="text" id="taskName" placeholder="Waiting for the agent to fill this field…" autocomplete="off">
+    <button id="createTask" type="button">Create task</button><button id="verify" class="secondary" type="button" disabled>Verify state</button>
+    <div id="result" class="result" role="status"></div>
+  </section>
+  <aside class="card">
+    <div class="panel-head"><h2>Page event stream</h2><span class="tag" id="count">0 events</span></div>
+    <p class="small">Events below come from real page DOM callbacks triggered by Browser Lane actions.</p>
+    <div id="events" class="log"><div class="line"><span class="muted">01</span><span>Fixture loaded — waiting</span></div></div>
+  </aside>
+</div></div>
+<div id="docs" class="docs" hidden>
+ <div class="grid"><section class="card">
+    <h2 id="docsTitle">Agent-owned documentation tab</h2>
+    <p class="small">This is a second tab created by Browser Lane in the same isolated Chrome process. The user's regular Chrome profile is never attached.</p>
+    <div class="item"><strong>1. Owned-tab validation</strong><p>Each tab ID is explicitly tracked. Other tabs are not accessible through this controller.</p></div>
+    <div class="item"><strong>2. Navigation</strong><p>Page.navigate runs on the validated owned target only.</p></div>
+ </section><aside class="card"><h2>Test surface</h2><p class="small">Real Chromium render captured directly through DevTools Protocol.</p><div class="log" id="docsLog">GET /docs<br>Title: Semantic Bridge | Isolated Chrome Test<br>Result: navigation complete</div></aside></div>
+</div>
+<footer><span>LOCAL DEMO FIXTURE • NOT THE PROJECT'S UI</span><span>127.0.0.1 • No external accounts or personal browser data</span></footer>
+</main>
+<script>
+(function(){
+ const params=new URLSearchParams(location.search);
+ if(location.pathname==='/docs'||location.pathname==='/verified'){
+   document.querySelector('#work').hidden=true;document.querySelector('#docs').hidden=false;
+   document.querySelector('#stage').textContent='LIVE CHROME SESSION / SECOND OWNED TAB';
+   document.querySelector('#title').textContent=location.pathname==='/verified'?'Navigation verified':'Second browser tab created';
+   document.querySelector('#subtitle').textContent=location.pathname==='/verified'?'Agent navigation succeeded on an owned target.':'Browser Lane opened a separate background page.';
+   if(location.pathname==='/verified'){document.querySelector('#docsTitle').textContent='Owned tab navigation passed';document.querySelector('#docsLog').textContent='GET /verified\nPage.readyState: complete\nNavigation result: verified'}
+   return;
+ }
+ let n=0;
+ const log=(value)=>{
+   n+=1; document.querySelector('#count').textContent=n+' DOM event'+(n!==1?'s':'');
+   const item=document.createElement('div');item.className='line';item.innerHTML='<span class="num">'+String(n).padStart(2,'0')+'</span><span></span>';
+   item.children[1].textContent=value;document.querySelector('#events').append(item);
+ };
+ document.querySelector('#taskName').addEventListener('input',()=>{log('input → #taskName');document.querySelector('#stage').textContent='LIVE CHROME SESSION / FIELD FILLED'});
+ document.querySelector('#createTask').addEventListener('click',()=>{
+    const name=document.querySelector('#taskName').value.trim(); if(!name)return;
+    const result=document.querySelector('#result');result.classList.add('visible');result.textContent='✓ Created: '+name;
+    document.querySelector('#verify').disabled=false;
+    document.querySelector('#stage').textContent='LIVE CHROME SESSION / CLICK CONFIRMED';log('click → #createTask');log('DOM result → task created');
+ });
+ document.querySelector('#verify').addEventListener('click',()=>{
+    if(document.querySelector('#verify').disabled)return;
+    document.querySelector('#result').textContent='✓ State verified — task persisted in this tab';
+    document.querySelector('#stage').textContent='LIVE CHROME SESSION / STATE VERIFIED';
+    log('click → #verify');log('read → verified state');
+ });
+})();
+</script>
+</body>
+</html>
